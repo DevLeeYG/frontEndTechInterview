@@ -234,6 +234,7 @@ function logEvent(event) {
 	console.log(event.currentTarget.className);
 }
   ```
+  ```
 - addEventListener() API에서 옵션 객체에 capture:true를 설정해주면 됩니다. 그러면 버블링과 반대 방향으로 탐색을 합니다
 
 **이벤트 위임의 장점은 무엇인가요?**
