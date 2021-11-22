@@ -69,21 +69,20 @@ border:none;
   요즘은 **노말라이즈** 가 많이 사용되고 있다.
 
 - **sass, css module, css in js에 대해, 각각 장단점.**
-
-#### CSS
+#### css
     **장점**: 
-   **1.기능확장성**
-      - 추가적인 sw나 플러그인이 필요없이 html 기능 확장
+   1.기능확장성
+     - 추가적인 sw나 플러그인이 필요없이 html 기능 확장
      - 설정하기 쉽고 단순한 규칙
      - w3c에서 웹표준으로 정의
-   **2.양식모듈화**
+   2.양식모듈화
      - 흐름이 같은 문서 약식으로 저네 구성가능
      - 디자인과 웹구조의 완벽한 분리로 하나의 html문서에 다양한 디자인 적용 가능
-   **3.간편성**
+   3.간편성
     - 문서 형식을 손쉽고 다양하게 구성 가능
     - 코드 절약을 통한 작은 용량
     - 이해하기 쉬운 구조
-   **4.일관성**
+   4.일관성
     - 사용 환경에 영향 받지 않습니다.
     - 웹페이지의 한가지 요소만 변경해도 전체페이지의 내용을 한꺼번에 변경할수 있습니다
    **단점**
@@ -127,12 +126,14 @@ border:none;
 이 화면을 만드려면 어떤식으로 해야할 것 같나요?
 ```
 
-JS 관련
+# JS 관련
 #### JS를 body 맨 밑에 둬야 하는 이유는 무엇인가요?
 
 - js코드가 무거울 경우 이 코드들을 불러오느라 html css가 렌더링되지 않아 대기 상태가 길어질수있어 사용자의 경우 오류로 판단할수 있다. 하지만 맨뒤에 선언할경우 html과 css가 모두 동작한 다음 불러와 미완성 상태가 길지 않을것이다 또한 문서의 dom구조가 완료된 시점에서 실행되기 때문에 따로 추가 설정할 필요가 없다.
 
 head에 둬야 하는 경우가 있을까요? 어떨 때인가요?(defer async 제외)
+
+var, let, const의 차이는 무엇인가요?
 
 **scope 란**?
  - 유효범위 이며 모든 식별자(변수이름,함수이름,클래스 이름)는 자신이 선언된 위치에 의해 다른 코드가 식별자 자신을 참조할수 있는 유효 범위가 결정된다. 즉 이를 scope라고 하며 스코프는 식별자가 유효한 범위를 말한다
@@ -146,10 +147,99 @@ head에 둬야 하는 경우가 있을까요? 어떨 때인가요?(defer async �
 **block scope란 무엇인가요?**
 
  - 모든 코드 블록(함수,if문,for문,while문,try/catch문 등)내에서 선언된 변수는 코드 블록 내에서만 유효하며 코드 블록 외부에서는 참조할 수 없다. 즉, 코드 블록 내부에서 선언한 변수는 지역 변수이다.
+ 
+ **렉시컬 환경?**
+ 
+-  스크립트 전체, 실행중인 함수, 코드블록 등은 자신만의 렉시컬 환경을 갖는다. 렉시컬 환경은 환경레코드, 외부렉시컬 환경으로 구성된다.
 
-이벤트 버블링, 캡처링, 위임
+```js
+function na(a, b) {
+	let name = 'lee' 
+}
 
-이벤트 위임의 장점은 무엇인가요?
+na()
+
+환경레코드에 {name: 'lee', a: undefined } 이런식으로 저장되어 있다.
+```
+
+**외부 렉시컬 환경?**
+
+- 현재 렉시컬 환경보다 더 상위의 렉시컬 환경이다. 스크립트는 최상위 렉시컬 환경이며 스크립트 내에 호출된 함수나 코드블록은 외부렉시컬 환경으로 스크립트 렉시컬 환경을 참조한다.
+
+**이벤트 등록?**<캡틴판교>
+```js
+<button>add one item</button>
+HTMLCopy
+var button = document.querySelector('button');
+button.addEventListener('click', addItem);
+
+function addItem(event) {
+	console.log(event);
+}
+```
+- add one item 이라는 버튼을 쿼리셀럭터로 가져와서 버튼에 클릭 이벤트를 달아줍니다
+버튼을 클릭하면 addItem이라는 함수가 실행되며 addItem 함수에 event인자가 넘어옵니다
+
+"하위에서 상위 요소로의 이벤트 전파방식을 "Event Bubbling" 이라고 합니다.
+
+**이벤트 버블링, 캡처링, 위임**
+
+- 버블링?:
+  - 하위의 요소중에 이벤트가 발생했을때 더상위의 화면 요소들에게 전달되는 것이다
+  예를들어 리액트 에서 하위컴포넌트의 데이터가 상위컴포넌트에 전달된다는 의미랑 같다
+  
+  ```js
+<body>
+	<div class="one">
+		<div class="two">
+			<div class="three">
+			</div>
+		</div>
+	</div>
+</body>
+HTMLCopy
+var divs = document.querySelectorAll('div');
+divs.forEach(function(div) {
+	div.addEventListener('click', logEvent);
+});
+```
+function logEvent(event) {
+	console.log(event.currentTarget.className);
+}
+```
+```
+ 
+- 캡쳐?:
+ 
+  - 이벤트 캡쳐는 이벤트 버블링과 반대 방향으로 진행되는 이벤트 전파 방식
+  
+  ```js
+<body>
+	<div class="one">
+		<div class="two">
+			<div class="three">
+			</div>
+		</div>
+	</div>
+</body>
+HTMLCopy
+var divs = document.querySelectorAll('div');
+divs.forEach(function(div) {
+	div.addEventListener('click', logEvent, {
+		capture: true // default 값은 false입니다.
+	});
+});
+
+function logEvent(event) {
+	console.log(event.currentTarget.className);
+}
+  ```
+- addEventListener() API에서 옵션 객체에 capture:true를 설정해주면 됩니다. 그러면 버블링과 반대 방향으로 탐색을 합니다
+
+**이벤트 위임의 장점은 무엇인가요?**
+- 이벤트 위임은 실제 바닐라 JS로 웹 앱을 구현할 때 자주 사용하게 되는 코딩 패턴입니다.
+- 이벤트 위임을 한 문장으로 요약해보면 ‘하위 요소에 각각 이벤트를 붙이지 않고 상위 요소에서 하위 요소의 이벤트들을 제어하는 방식’입니다.
+- ex: 예를들어 나중에 input을 추가했는데 일일이 또 달아줘야할까? no/ class에 등록된것을 전부 불러오고 거기에 이벤트를 달아주면됩니다
 
 캡처링은 어떨 때에 쓸 수 있을까요?
 
@@ -402,3 +492,5 @@ XSS, CSRF는 무엇인가요?
 개발말고 다른 것에 열정적으로 해본 것이 있나요?
 
 개발자가 사용자의 ux를 향상 시키기 위한 방법은 어떤 것이 있나요?
+
+
