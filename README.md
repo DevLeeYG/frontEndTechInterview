@@ -337,6 +337,7 @@ JS의 기본적인 동작 방식을 추상화한 것이기 때문에 사라지�
 
 
 **실행 컨텍스트란 무엇인가요?**
+
 - 자바스크립트의 동적 언어로서의 성격을 가장 잘 파악할 수 있는 개념
 - 실행 컨텍스트란 실행 코드에 제공할 정보들을 모아 놓은 객체입니다.
 https://velog.io/@hi4190/Execution-Context%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8
@@ -349,21 +350,88 @@ https://velog.io/@hi4190/Execution-Context%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%E
  - ex null 은 사용자가 임의로 없는값을 지정하는것이고 undfined는 엔진이 찾지 못하면 결정을 해준다 근데 ==은 뜻에 상관없이 없는값이기에 true를 해주는방면
  - === 은 false를 반환해준다
 
-NaN 과 NaN을 비교하면 어떻게 되나요? 어떻게 확인할 수 있나요?
+**NaN 과 NaN을 비교하면 어떻게 되나요? 어떻게 확인할 수 있나요?**
 
-setTimeout(callback, 0) 은 어떻게 동작하나요?
+NaN 판별
+NaN은 다른 모든 값과 비교(==, !=, ===, !==)했을 때 같지 않으며, 다른 NaN과도 같지 않습니다. NaN의 판별은 Number.isNaN() 또는 isNaN()을 사용하면 제일 분명하게 수행할 수 있습니다. 아니면, 오로지 NaN만이 자기자신과 비교했을 때 같지 않음을 이용할 수도 있습니다.
 
-Promise란 무엇인가요? async await 또한,
+```js
+NaN === NaN;        // false
+Number.NaN === NaN; // false
+isNaN(NaN);         // true
+isNaN(Number.NaN);  // true
 
-ES6에 추가된 문법에 대해 말해주세요.
+function valueIsNaN(v) { return v !== v; }
+valueIsNaN(1);          // false
+valueIsNaN(NaN);        // true
+valueIsNaN(Number.NaN); // true
+```
+그러나 isNaN()과 Number.isNaN()의 차이를 주의해야 합니다. isNaN은 현재 값이 NaN이거나, 숫자로 변환했을 때 NaN이 되면 참을 반환하지만, Number.isNaN은 현재 값이 NaN이어야만 참을 반환합니다.
+```js
+isNaN('hello world'); // true
+Number.isNaN('hello world'); // false
+```
+덧붙여서, 일부 배열 메서드는 NaN을 찾을 수 없습니다.
 
-NULL 병합 연산자는 무엇인가요?
+```js
+let arr = [2, 4, NaN, 12];
+arr.indexOf(NaN);                      // -1 (false)
+arr.includes(NaN);                     // true
+arr.findIndex(n => Number.isNaN(n));   // 2
+```
 
-optional chaning의 장점은 무엇인가요?
 
-for of 는 어떻게 동작하나요?
+**setTimeout(callback, 0) 은 어떻게 동작하나요?** : 이벤트 루프의 구동방식과 똑같다
 
-iterator에 대해 설명해주세요.
+**Promise란 무엇인가요? async await 또한**,
+
+ - 자바스크립트의 비동기처리를 위한 객체입니다,또한 콜백 지옥을 피하기 위해 나온것이며 기존 콜백에서는 무조건 콜백함수 안에서 데이터 처리를 해야되서 데이터연결을 짓다가 콜배지옥을 많이 만나게 되지만 프로미스 객체가 나온뒤로는 피할수있습니다
+ 리졸브와 리젝티드 로 데이터와 에러를 내보낼수있고 then()처리로 데이터를 따로 처리할수 있습니다. 여기서
+ 더발전된 async await가 있는데 단점을 보완하고 가독성을 높이기 위해 나온 기술입니다. 프로미스에서도 비동기처리를 하려면
+ 콜백 처리를 해줘야하는데 asnyc await는 콜백처리를 따로 하지않아 가독성 면에서 매우 훌륭합니다.
+ 결론적으로 코드를 많이 줄일수 있습니다
+
+**ES6에 추가된 문법에 대해 말해주세요.**
+
+- 화살표 문법 : =>
+- classes : 
+  - ES6의 클래스는 프로토타입 기반 객체지향패턴을 더 쉽게 사용할 수 있는 대체재.
+  - 익명 또는 기명일 수 있으며, 기명인 경우 클래스명은 본체에서 지역 범위임.
+
+- Template Strings
+  - 백틱을 사용해 문법적으로 string을 생성할수 있어서 간편함
+
+- Destructuring(구조분해할당)
+  - 배열이나 객체의 속성을 해체하여 거기에 있는 속성들을 개별적인 변수에 담을 수 있는 선언방식.
+  - 배열과 객체에 패턴 매칭을 통한 데이터 바인딩을 제공함.
+- Default, Rest, Spread 
+  - Default parameters : 파라미터에 기본값 설정.
+  
+  - Rest parameters : -가변인자 사용가능, 배열로 치환. 다수의 값들을 배열로 묶어냄.(나머지들을 배열로 묶음)
+  
+ - Spread :
+    
+    - -함수 호출 시 배열을 일련의 인자에 나누어 주입. 하나의 입력값을 받을 때 유용.
+ 
+ - let, const : var를 대체 좀더 명확한 변수 생성
+ 
+ - For ... of문
+   - 배열을 관리할때 포문처럼 사용해주는(Iterator 기반의 컬렉션 전용 반복문. 반복 가능한 객체를 대상으로 각 개별 속성값에 대한 반복문 수행.)
+   
+- JS Clousure : 윗 클로저 참조
+
+**NULL 병합 연산자는 무엇인가요?**
+?? 은 왼쪽 연산자가 null or undefined 라면 오른쪽 을 아니면 왼쪽을 반환 한다
+
+**optional chaning의 장점은 무엇인가요?**
+ - 남용한다면 디버깅이 어려워질수 있다 제일 앞의 오브젝트의 선언은 되어있는 상태에서 쓰자
+
+
+**for of 는 어떻게 동작하나요?**
+https://velog.io/@hi4190/for-...-of
+
+**iterator에 대해 설명해주세요.**
+https://velog.io/@hi4190/jsiterable
 
 generator에 대해 설명해주세요.
 
@@ -578,8 +646,4 @@ XSS, CSRF는 무엇인가요?
 개발말고 다른 것에 열정적으로 해본 것이 있나요?
 
 개발자가 사용자의 ux를 향상 시키기 위한 방법은 어떤 것이 있나요?
-
-
-
-
 
