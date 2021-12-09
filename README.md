@@ -433,7 +433,8 @@ https://velog.io/@hi4190/for-...-of
 **iterator에 대해 설명해주세요.**
 https://velog.io/@hi4190/jsiterable
 
-generator에 대해 설명해주세요.
+**generator에 대해 설명해주세요.**
+https://velog.io/@hi4190/js%EC%A0%9C%EB%84%88%EB%A0%88%EC%9D%B4%ED%84%B0generator
 
 JS의 GC는 무엇인가요?
 
@@ -646,3 +647,4 @@ XSS, CSRF는 무엇인가요?
 개발말고 다른 것에 열정적으로 해본 것이 있나요?
 
 개발자가 사용자의 ux를 향상 시키기 위한 방법은 어떤 것이 있나요?
+
